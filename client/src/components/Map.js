@@ -5,6 +5,7 @@ import { MAPBOX_ACCESS_TOKEN } from '../config'
 // import Button from "@material-ui/core/Button";
 // import Typography from "@material-ui/core/Typography";
 // import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+import Blog from './Blog'
 import PinIcon from './PinIcon'
 import Context from '../context'
 
@@ -80,6 +81,8 @@ const Map = ({ classes }) => {
           </Marker>
         )}
       </ReactMapGL>
+      {/* Blog Area to add Pin Content */}
+      <Blog />
     </div>
   )
 }
