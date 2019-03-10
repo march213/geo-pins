@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import axios from 'axios'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
@@ -8,6 +9,7 @@ import LandscapeIcon from '@material-ui/icons/LandscapeOutlined'
 import ClearIcon from '@material-ui/icons/Clear'
 import SaveIcon from '@material-ui/icons/SaveTwoTone'
 import Context from '../../context'
+import { CLOUDINARY_NAME, CLOUDINARY_UPLOAD_PRESET } from '../../config'
 
 const CreatePin = ({ classes }) => {
   const { dispatch } = useContext(Context)
@@ -15,8 +17,18 @@ const CreatePin = ({ classes }) => {
   const [image, setImage] = useState('')
   const [content, setContent] = useState('')
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleImageUpload = async () => {
+    const data = new FormData()
+    data.append('file', image)
+    data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+    data.append('cloud_name', CLOUDINARY_NAME)
+
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
+      data
+    )
+
+    return res.data.url
   }
 
   const handleDeleteDraft = () => {
@@ -24,6 +36,13 @@ const CreatePin = ({ classes }) => {
     setImage('')
     setContent('')
     dispatch({ type: 'DELETE_DRAFT' })
+  }
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    const url = await handleImageUpload()
+    console.log('TCL: CreatePin -> {url, title, image, content}', { url, title, image, content })
   }
 
   return (
